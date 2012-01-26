@@ -43,7 +43,13 @@
             return $split[0];
         }
 
+        public function read_more_body($text) {
+            $split = preg_split("/(<p>)?<a class=\"read_more\" href=\"([^\"]+)\">e51b2b9a58824dd068d8777ec6e97e4d<\/a>(<\/p>(\n\n<\/p>(\n\n)?)?|<br \/>)?/", $text);
+            return $split[0];
+        }
+
         public function preview($text) {
             return preg_replace("/<!--more(\(([^\)]+)\))?-->/", "<hr />", $text);
         }
     }
+
