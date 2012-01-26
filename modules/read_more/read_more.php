@@ -60,7 +60,7 @@
             if (!isset($string)) {
                 $string = __("Read More &raquo;", "theme");
             }
-            return = "<$tag><a class=\"read_more\" href=\"$url\">$string</a></$tag>";
+            return "<$tag><a class=\"read_more\" href=\"$url\">$string</a></$tag>";
         }
 
 
