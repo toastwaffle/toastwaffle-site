@@ -48,19 +48,16 @@
             return $split[0];
         }
 
-        public function read_more_link($text, $tag = "p", $string = null) {
+        public function read_more_link($text, $string = null) {
             if (!substr_count($text, "e51b2b9a58824dd068d8777ec6e97e4d"))
                 return $text;
 
             $match = preg_match("/(<p>)?<a class=\"read_more\" href=\"([^\"]+)\">e51b2b9a58824dd068d8777ec6e97e4d<\/a>(<\/p>(\n\n<\/p>(\n\n)?)?|<br \/>)?/", $text);
             $url = $match[2];
-            if ($tag instanceof Post){
-                $tag = "p";
-            }
             if (!isset($string)) {
                 $string = __("Read More &raquo;", "theme");
             }
-            $return = "<$tag><a class=\"read_more\" href=\"$url\">$string</a></$tag>";
+            $return = "<a class=\"read_more\" href=\"$url\">$string</a>";
         }
 
 
