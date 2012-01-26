@@ -1,0 +1,29 @@
+{% extends "layout.twig" %}
+
+{% block title %}${ "BioBox Settings" | translate("BioBox Settings") }{% endblock %}
+
+{% block content %}
+            <h1>${ "BioBox Settings" }</h1>
+            <form id="biobox_settings" class="split" action="{% admin "biobox_settings" %}" method="post">
+                <fieldset>
+                    <p>
+                        <label for="biobox_title">${ "Title" }</label>
+                        <input class="text" type="text" name="biobox_title" value="${ site.biobox_title | escape }" id="biobox_title" />
+						<span class="sub"><?php echo __('Title for your Bio Box.', 'metadata'); ?></span>
+                    </p>
+                    <p>
+                        <label for="biobox_text">${ "Text" }</label>
+                        <textarea class="code" name="biobox_text" id="biobox_text" rows="9" cols="50">${ site.biobox_text | escape }</textarea>
+						<span class="sub"><?php echo __('Text for your Bio Box', 'metadata'); ?></span>
+                    </p>
+
+                    <p class="buttons">
+                        <p>
+                            <button type="submit" class="yay">${ "Update" | translate }</button>
+                        </p>
+                    </p>
+
+                    <input type="hidden" name="hash" value="$site.secure_hashkey" id="hash" />
+                </fieldset>
+            </form>
+{% endblock %}

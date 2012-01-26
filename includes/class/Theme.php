@@ -50,6 +50,8 @@
 
             $where = ADMIN ? array("id not" => $exclude) : array("show_in_list" => true) ;
             $pages = Page::find(array("where" => $where, "order" => "list_order ASC"));
+            //$posts = Post::find(array("where"=>array("feather"=>'link')));
+            //$pages = array_merge_recursive($pages,$posts);
 
             if (empty($pages))
                 return $this->pages_list[$start] = array();

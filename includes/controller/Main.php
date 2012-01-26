@@ -215,10 +215,10 @@
         }
 
         /**
-         * Function: index
+         * Function: blog
          * Grabs the posts for the main page.
          */
-        public function index() {
+        public function blog() {
             $sql = SQL::current();
             $posts = $sql->select("posts",
                                   "posts.id",
@@ -231,10 +231,19 @@
                                  array("id" => $post),
                                  array("status" => "public"));
 
-            $this->display("pages/index",
+            $this->display("pages/blog",
                            array("posts" => new Paginator(Post::find(array("placeholders" => true)),
                                                           $this->post_limit)));
         }
+        /**
+         * Function: index
+         * Displays page for index
+         */
+        public function index() {
+            $page = new Page("index");
+            if ($page->no_results)
+                return false; # Page not found; the 404 handling is handled externally.
+            $this->display(array("pages/page", "pages/".$page->url), array("page" => $page), $page->title);        }
 
         /**
          * Function: archive

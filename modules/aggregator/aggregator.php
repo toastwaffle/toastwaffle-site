@@ -72,6 +72,10 @@
             return $content;
         }
 
+	public function head() {
+		$this->main_index(Null);
+	}
+
         public function main_index($main) {
             $config = Config::current();
             if ($config->disable_aggregation or time() - $config->last_aggregation < ($config->aggregate_every * 60))
@@ -248,9 +252,13 @@
                 foreach ($calls[0] as $index => $full) {
                     $function = $calls[1][$index];
                     $arguments = explode(" || ", $calls[2][$index]);
+                    $result = call_user_func_array($function, $arguments);
+                    if (is_array($result)) {
+                        $result = reset($result);
+                    }
 
                     $value = str_replace($full,
-                                         call_user_func_array($function, $arguments),
+                                         $result,
                                          $value);
                 }
 

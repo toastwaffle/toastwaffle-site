@@ -1,0 +1,9 @@
+name: Email Obfuscator
+url: chryp.net
+version: 1.0
+description: Obfuscate Emails
+author:
+  name: Jack Lightbody
+  url: chryp.net
+conflicts:
+  - no idea

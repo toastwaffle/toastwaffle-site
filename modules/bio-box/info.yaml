@@ -1,0 +1,13 @@
+name: Bio Box
+url: http://www.toastwaffle.com
+version: 1.0
+description: A Bio Box for your sidebar, to add a little bit of static content on every page.
+license:
+author:
+  name: Samuel Littley
+  url: http://www.toastwaffle.com
+
+notifications:
+
+
+# 1.0: First release. By Samuel Littley

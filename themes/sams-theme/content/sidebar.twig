@@ -1,0 +1,17 @@
+            <div id="sidebar">
+
+${ trigger.call("sidebar") }
+
+                {% if theme.archives_list %}
+                <h1>${ "Archives" | translate }</h1>
+                <ul>
+                    {% for archive in theme.archives_list %}
+                    <li>
+                        <a href="$archive.url">${ archive.when | strftime("%B %Y" | translate) }</a>
+                        <span class="sub">($archive.count)</span>
+                    </li>
+                    {% endfor %}
+                    <li><a href="{% url "archive" %}">${ "All →" | translate }</a></li>
+                </ul>
+                {% endif %}
+            </div>
