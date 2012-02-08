@@ -56,3 +56,7 @@
 			echo '                '.$text;
 		}
 	}
+
+	$biobox = new BioBox();
+
+?>
