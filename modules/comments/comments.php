@@ -22,7 +22,7 @@
                              post_id INTEGER DEFAULT 0,
                              user_id INTEGER DEFAULT 0,
                              parent_id INTEGER DEFAULT 0,
-                             notify INTEGER DEFAULT 1,
+                             notify INTEGER DEFAULT 0,
                              created_at DATETIME DEFAULT NULL,
                              updated_at DATETIME DEFAULT NULL
                          ) DEFAULT CHARSET=utf8");
@@ -76,7 +76,7 @@
             if (empty($_POST['author'])) error(__("Error"), __("Author can't be blank.", "comments"));
             if (empty($_POST['email']))  error(__("Error"), __("E-Mail address can't be blank.", "comments"));
 
-            fallback($parent,     (int) !empty($_POST['parent']));
+            fallback($parent,     (int) !empty($_POST['parent_id']));
             fallback($notify,     (int) !empty($_POST['notify']));
 
             Comment::create($_POST['body'],
@@ -108,8 +108,8 @@
                              $_POST['author_url'],
                              $_POST['author_email'],
                              $status,
-                             $created_at,
-                             $_POST['notify']);
+                             $_POST['notify'],
+                             $created_at);
 
             if (isset($_POST['ajax']))
                 exit("{ \"comment_id\": \"".$_POST['id']."\", \"comment_timestamp\": \"".$created_at."\" }");

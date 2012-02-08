@@ -67,9 +67,10 @@
          *     $email - The commenter's email.
          *     $post - The <Post> they're commenting on.
          *     $parent - The <Comment> they're replying to.
+         *     $notify - Notification on follow-up comments.
          *     $type - The type of comment. Optional, used for trackbacks/pingbacks.
          */
-        static function create($body, $author, $url, $email, $post, $parent = 0, $notify = 1, $type = null) {
+        static function create($body, $author, $url, $email, $post, $parent, $notify, $type = null) {
             if (!self::user_can($post->id) and !in_array($type, array("trackback", "pingback")))
                 return;
 
@@ -167,6 +168,7 @@
          *     $post - The <Post> they're commenting on.
          *     $user_id - The ID of this <User> this comment was made by.
          *     $parent - The <Comment> they're replying to.
+         *     $notify - Notification on follow-up comments.
          *     $created_at - The new comment's "created" timestamp.
          *     $updated_at - The new comment's "last updated" timestamp.
          */
@@ -196,8 +198,8 @@
                                "updated_at" => oneof($updated_at, "0000-00-00 00:00:00")));
 
             $new = new self($sql->latest("comments"));
-
             Trigger::current()->call("add_comment", $new);
+            self::notify(strip_tags($author), $body, $post);
             return $new;
         }
 
@@ -324,23 +326,23 @@
          *     $body - The new comment
          *     $post - The id of the post that was commented on
          */
-        public function notify($author, $body, $post){
+        static function notify($author, $body, $post) {
             $sql = SQL::Current();
             $config = Config::current();
-            $post = new Post($post);
 
-            $emails = $sql->select('__comments', 'author_email', 'notify = 1 AND post = '.$post)->fetchAll();
-            $list=array();
-            foreach($emails as $email){
-                $list[]=$email->author_email;
-            }
-            $to = $_POST['email'].implode(', ', $list);;
+            $post = new Post($post);
+            $emails = $sql->select("__comments", "author_email", array("notify" => 1, "post_id" => $post->id))->fetchAll();
+
+            $list = array();
+            foreach ($emails as $email)
+                $list[] = $email->author_email;
+
+            $to = $_POST['email'].implode(", ", $list);;
             $subject = $config->name.__("New Comment");
             $message = "There is a new comment at ".$post->url()."\n Poster: ".$author."\n Message: ".$body;
             $headers = "From:".$config->email."\r\n" .
                                    "Reply-To:".$config->email. "\r\n" .
                                    "X-Mailer: PHP/".phpversion() ;
-
             $sent = email($to, $subject, $message, $headers);
         }
 

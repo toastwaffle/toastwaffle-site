@@ -8,6 +8,7 @@
         </span>
     </p>
     {% else %}
+    <h3 class="comments">${ "Speak up!" | translate }</h3>
     <p>
         <label for="author">${ "Your Name" | translate }</label>
         <input type="text" name="author" value="" id="author" />
@@ -26,7 +27,7 @@
     </p>
     <p>
         <input name="notify" type="checkbox" />
-        ${ "Notify me when others comment on this post" | translate }
+        <span class="label">${ "Notify me when others comment on this post" | translate }</span>
     </p>
     <br />
     <p>
@@ -35,7 +36,7 @@
         <input type="hidden" name="email" value="$visitor.email" id="email" />
         <input type="hidden" name="url" value="$visitor.website" id="url" />
         {% endif %}
-        <input type="hidden" name="parent_id" value="${ GET.replytocom | escape }" id="parent_id" />
+        <input type="hidden" name="parent_id" value="${ GET.replytocomment | escape }" id="parent_id" />
         <input type="hidden" name="post_id" value="$post.id" id="post_id" />
         <button type="submit">${ "Speak" | translate }</button>
     </p>
