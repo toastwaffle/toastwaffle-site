@@ -331,11 +331,11 @@
             $config = Config::current();
 
             $post = new Post($post);
-            $emails = $sql->select("__comments", "author_email", array("notify" => 1, "post_id" => $post->id))->fetchAll();
+            $emails = $sql->select("comments", "author_email", array("notify" => 1, "post_id" => $post->id))->fetchAll();
 
             $list = array();
             foreach ($emails as $email)
-                $list[] = $email->author_email;
+                $list[] = $email["author_email"];
 
             $to = $_POST['email'].implode(", ", $list);;
             $subject = $config->name.__("New Comment");
