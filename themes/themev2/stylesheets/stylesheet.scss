@@ -45,12 +45,12 @@ $defpadding: 15px;
 }
 
 @mixin button($basecolour) {
-    display: block;
+    display: inline-block;
     @include all_rounded_corners(5px);
     background-color: $basecolour;
     @include gradient_background($basecolour);
     border: 1px solid #ffffff;
-    padding: $defpadding;
+    padding: 10px;
     color: #ffffff
 }
 
@@ -219,8 +219,7 @@ body {
     div.sidebar input#search {
         background-color: #fff;
         border: 0;
-        margin: -5px auto 0;
-        width: 150px;
+        width: 250px;
         padding: .4em .7em;
         display: block;
     }
@@ -602,4 +601,7 @@ body {
     font-weight: bold;
     color: #666;
     float: right;
+}
+.controls {
+    float:right;
 }

@@ -287,9 +287,9 @@ form {
  * Define consistent border, margin, and padding
  */
 fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em; }
+  border: 0;
+  margin: 0;
+  padding: 0; }
 
 /*
  * 1. Corrects color not being inherited in IE6/7/8/9
@@ -534,7 +534,7 @@ body {
     float: right;
     margin: 0 0 0 .5em; }
   body a.comment_delete_link, body a.delete_link, body a.cancel, body a.logout {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -549,10 +549,10 @@ body {
     background-image: -ms-linear-gradient(top, #a21d22 0%, #4b0e10 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #a21d22), color-stop(1, #4b0e10));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body a.comment_edit_link, body a.edit_link {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -567,10 +567,10 @@ body {
     background-image: -ms-linear-gradient(top, #059bd2 0%, #03516e 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #059bd2), color-stop(1, #03516e));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body a.comment_replyto_link {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -585,13 +585,13 @@ body {
     background-image: -ms-linear-gradient(top, #ab6f14 0%, #503409 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ab6f14), color-stop(1, #503409));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body a.next_page,
   body a.prev_page,
   body a.next_post,
   body a.prev_post {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -606,13 +606,13 @@ body {
     background-image: -ms-linear-gradient(top, #9b0f53 0%, #3e0621 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #9b0f53), color-stop(1, #3e0621));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body a.next_page:hover,
   body a.prev_page:hover,
   body a.next_post:hover,
   body a.prev_post:hover {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -627,7 +627,7 @@ body {
     background-image: -ms-linear-gradient(top, #ea2685 0%, #9b0f53 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ea2685), color-stop(1, #9b0f53));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body label {
     color: #ffffff;
@@ -657,12 +657,11 @@ body {
   body div.sidebar input#search {
     background-color: #fff;
     border: 0;
-    margin: -5px auto 0;
-    width: 150px;
+    width: 250px;
     padding: .4em .7em;
     display: block; }
   body div.notice {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -677,10 +676,10 @@ body {
     background-image: -ms-linear-gradient(top, #5b8824 0%, #25370f 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5b8824), color-stop(1, #25370f));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body div.message {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -695,10 +694,10 @@ body {
     background-image: -ms-linear-gradient(top, #059bd2 0%, #03516e 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #059bd2), color-stop(1, #03516e));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body div.warning {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -713,10 +712,10 @@ body {
     background-image: -ms-linear-gradient(top, #a21d22 0%, #4b0e10 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #a21d22), color-stop(1, #4b0e10));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white; }
   body div.date {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -731,11 +730,11 @@ body {
     background-image: -ms-linear-gradient(top, #8372f0 0%, #3418e4 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #8372f0), color-stop(1, #3418e4));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white;
     cursor: default; }
   body div.footer a.atom {
-    display: block;
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -750,7 +749,7 @@ body {
     background-image: -ms-linear-gradient(top, #ab6f14 0%, #503409 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ab6f14), color-stop(1, #503409));
     border: 1px solid #ffffff;
-    padding: 15px;
+    padding: 10px;
     color: white;
     float: right; }
 
@@ -1064,4 +1063,7 @@ body {
 #debug .toggle {
   font-weight: bold;
   color: #666;
+  float: right; }
+
+.controls {
   float: right; }

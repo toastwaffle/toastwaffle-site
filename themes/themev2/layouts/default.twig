@@ -74,7 +74,7 @@
         <div class="main">
             <div class="wrapper">
                 <div class="contentouter">
-                    <div id="content">
+                    <div class="content">
                         {% for type, messages in flash.all | items %}
                         {% for message in messages %}
                         <div class="${ type | depluralize }">$message</div>
@@ -87,10 +87,10 @@
                         {% if posts.paginated and posts.pages > 1 %}
                         <span class="pages">${ "Page %d of %d" | translate | format(posts.page, posts.pages) }</span>
                         {% endif %}
-                        <div id="footer">
+                        <div class="footer">
+                            <a class="atom" href="{% url "feed" %}">atom</a>
                             <p>Site © 2012 <a href="mailto:samuel.littley@toastwaffle.com">Samuel Littley</a></p>
                             <p>${ "Proudly Powered by <a class=\"chyrp\" href=\"http://chyrp.net/\">Chyrp</a>" | translate }</p>
-                            <a class="atom" href="{% url "feed" %}">atom</a>
                         </div>
                     </div>
                 </div>
