@@ -7,3 +7,4 @@ includes/database.yaml.php
 themes/*
 !themes/firecrest
 !themes/sams-theme
+!themes/themev2

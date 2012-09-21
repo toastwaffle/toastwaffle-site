@@ -1,0 +1,34 @@
+<!DOCTYPE html5>
+<html>
+<head>
+<title>
+Bla Bla Black Cow
+</title>
+<link rel="stylesheet" type="text/css" href="./normalize.css" />
+<style type="text/css">
+body {
+	background-color: #181818;
+	background: url('./dots-grey.gif');
+}
+@media all and (max-width: 800px) {
+	div.header {
+		background: url('./Textures/header-800px.png');
+		height: 200px;
+		width: 800px;
+	}
+}
+@media all and (min-width: 801px) {
+	div.header {
+		background: url('./Textures/header-1200px.png');
+		height: 300px;
+		width: 1200px;
+	}
+}
+</style>
+</head>
+<body>
+<div class="header">
+</div>
+<p>Hello</p>
+</body>
+</html>

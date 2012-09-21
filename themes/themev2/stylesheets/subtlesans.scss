@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'SubtleSansRegular';
+    src: url('../fonts/subtlesansregular.eot');
+    src: url('../fonts/subtlesansregular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/subtlesansregular.woff') format('woff'),
+         url('../fonts/subtlesansregular.ttf') format('truetype'),
+         url('../fonts/subtlesansregular.svg#SubtleSansRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SubtleSansLightRegular';
+    src: url('../fonts/subtlesanslight.eot');
+    src: url('../fonts/subtlesanslight.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/subtlesanslight.woff') format('woff'),
+         url('../fonts/subtlesanslight.ttf') format('truetype'),
+         url('../fonts/subtlesanslight.svg#') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SubtleSansUltraLightRegular';
+    src: url('../fonts/subtlesansultralight.eot');
+    src: url('../fonts/subtlesansultralight.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/subtlesansultralight.woff') format('woff'),
+         url('../fonts/subtlesansultralight.ttf') format('truetype'),
+         url('../fonts/subtlesansultralight.svg#SubtleSansUltraLightRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

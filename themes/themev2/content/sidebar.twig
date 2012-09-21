@@ -1,0 +1,27 @@
+            <div id="sidebar">
+                <div class="searchbox">
+                    <form action="$site.url" method="get" accept-charset="utf-8">
+                        <fieldset>
+                            <input type="hidden" name="action" value="search" id="action" />
+                            <input type="text" id="search" name="query" value="${ GET.query | escape }" />
+                        </fieldset>
+                    </form>
+                </div>
+
+${ trigger.call("sidebar") }
+
+                {% if theme.archives_list %}
+                    <div class="archives">
+                        <h2>${ "Archives" | translate }</h2>
+                        <ul>
+                            {% for archive in theme.archives_list %}
+                            <li>
+                                <a href="$archive.url">${ archive.when | strftime("%B %Y" | translate) }</a>
+                                <span class="sub">($archive.count)</span>
+                            </li>
+                            {% endfor %}
+                            <li><a href="{% url "archive" %}">${ "All →" | translate }</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
