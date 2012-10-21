@@ -72,19 +72,15 @@
             return $content;
         }
 
-	public function head() {
-		$this->main_index(Null);
-	}
-
         public function main_index($main) {
             $config = Config::current();
             if ($config->disable_aggregation or time() - $config->last_aggregation < ($config->aggregate_every * 60))
-                return;
+                exit;
 
             $aggregates = (array) $config->aggregates;
 
             if (empty($aggregates))
-                return;
+                exit;
 
             foreach ($aggregates as $name => $feed) {
                 $xml_contents = preg_replace(array("/<(\/?)dc:date>/", "/xmlns=/"),
@@ -119,7 +115,7 @@
                         $created = @$item->created ? strtotime($item->created) : 0;
                         if ($created <= 0)
                             $created = $updated;
-                        
+
                         # Construct the post data from the user-defined XPath mapping:
                         $data = array("aggregate" => $name);
                         foreach ($feed["data"] as $attr => $field) {
@@ -142,6 +138,7 @@
 
             $config->set("aggregates", $aggregates);
             $config->set("last_aggregation", time());
+            return true;
         }
 
         public function admin_manage_aggregates($admin) {
@@ -252,13 +249,9 @@
                 foreach ($calls[0] as $index => $full) {
                     $function = $calls[1][$index];
                     $arguments = explode(" || ", $calls[2][$index]);
-                    $result = call_user_func_array($function, $arguments);
-                    if (is_array($result)) {
-                        $result = reset($result);
-                    }
 
                     $value = str_replace($full,
-                                         $result,
+                                         call_user_func_array($function, $arguments),
                                          $value);
                 }
 
@@ -360,7 +353,7 @@
             $config->aggregates[$_POST['name']] = $aggregate;
 
             $config->set("aggregates", $config->aggregates);
-            $config->set("last_aggregation", 0);    // to force a refresh
+            $config->set("last_aggregation", 0); # to force a refresh
 
             Flash::notice(__("Aggregate updated.", "aggregator"), "/admin/?action=manage_aggregates");
         }
@@ -383,27 +376,27 @@
         }
 
         public function admin_destroy_aggregate($admin) {
+            $config = Config::current();
+
             if (empty($_POST['id']))
                 error(__("No ID Specified"), __("An ID is required to delete an aggregate.", "aggregator"));
 
             if ($_POST['destroy'] == "bollocks")
                 redirect("/admin/?action=manage_aggregates");
 
-            if (!isset($_POST['hash']) or $_POST['hash'] != Config::current()->secure_hashkey)
+            if (!isset($_POST['hash']) or $_POST['hash'] != $config->secure_hashkey)
                 show_403(__("Access Denied"), __("Invalid security key."));
 
             if (!Visitor::current()->group->can("delete_aggregate"))
                 show_403(__("Access Denied"), __("You do not have sufficient privileges to delete this aggregate.", "aggregator"));
-            
+
             $name = $_POST['id'];
             if ($_POST["delete_posts"]) {
                 $this->delete_posts($name);
                 $notice = __("Aggregate and its posts deleted.", "aggregator");
-            } else {
+            } else
                 $notice = __("Aggregate deleted.", "aggregator");
-            }
 
-            $config = Config::current();
             unset($config->aggregates[$name]);
             $config->set("aggregates", $config->aggregates);
             Flash::notice($notice, "/admin/?action=manage_aggregates");
@@ -414,10 +407,9 @@
             $attrs = $sql->select("post_attributes",
                                   "post_id",
                                   array("name" => "aggregate", "value" => $aggregate_name))->fetchAll();
-            foreach( $attrs as $attr) {
+
+            foreach ($attrs as $attr)
                 Post::delete($attr["post_id"]);
-            }
-            
         }
 
         public function help_aggregation_syntax() {

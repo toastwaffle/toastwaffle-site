@@ -5,7 +5,6 @@
         <title>{% block title %}$site.name{% if title %} &raquo; ${ title | escape }{% endif %}{% endblock %}</title>
         <meta name="description" content="$site.description" />
         <meta name="generator" content="Chyrp" />
-        <link href="http://fonts.googleapis.com/css?family=Droid+Serif:400,400italic" rel="stylesheet" type="text/css">
         <link rel="pingback" href="$site.chyrp_url/includes/xmlrpc.php" />
         <link rel="EditURI" type="application/rsd+xml" href="$site.chyrp_url/includes/rsd.php" />
         <link rel="shortcut icon" href="$site.url/favicon.ico" />
@@ -15,7 +14,7 @@
         $theme.feeds
         $theme.stylesheets
         $theme.javascripts
-${ trigger.call("head") }
+    ${ trigger.call("head") }
     </head>
     <body>
         {% if visitor.group.can("add_post", "add_draft", "add_page", "view_own_draft", "view_draft", "change_settings", "toggle_extensions") %}
@@ -46,7 +45,7 @@ ${ trigger.call("head") }
                     <form action="$site.url" method="get" accept-charset="utf-8">
                         <fieldset>
                             <input type="hidden" name="action" value="search" id="action" />
-                            <input type="text" id="search" name="query" value="${ GET.query | escape }" />
+                            <input type="text" id="search" name="query" value="${ GET.query | escape }" x-webkit-speech />
                         </fieldset>
                     </form>
                 </div>
@@ -83,8 +82,8 @@ ${ trigger.call("head") }
                 </div>
             </div>
         </div>
+        ${ trigger.call("end_content") }
         {% include "content/debug.twig" %}
         <!-- Queries: $sql_queries | Load Time: $theme.load_time -->
-        ${ trigger.call("end_content") }
     </body>
 </html>

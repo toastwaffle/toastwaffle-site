@@ -43,29 +43,7 @@
             return $split[0];
         }
 
-        public function read_more_body($text) {
-            $split = preg_split("/(<p>)?<a class=\"read_more\" href=\"([^\"]+)\">e51b2b9a58824dd068d8777ec6e97e4d<\/a>(<\/p>(\n\n<\/p>(\n\n)?)?|<br \/>)?/", $text);
-            return $split[0];
-        }
-
-        public function read_more_link($text, $tag = "p", $string = null) {
-            if (!substr_count($text, "e51b2b9a58824dd068d8777ec6e97e4d"))
-                return "";
-
-            $match = preg_match("/(<p>)?<a class=\"read_more\" href=\"([^\"]+)\">e51b2b9a58824dd068d8777ec6e97e4d<\/a>(<\/p>(\n\n<\/p>(\n\n)?)?|<br \/>)?/", $text);
-            $url = $match[2];
-            if ($tag instanceof Post){
-                $tag = "p";
-            }
-            if (!isset($string)) {
-                $string = __("Read More &raquo;", "theme");
-            }
-            return "<$tag><a class=\"read_more\" href=\"$url\">$string</a></$tag>";
-        }
-
-
         public function preview($text) {
             return preg_replace("/<!--more(\(([^\)]+)\))?-->/", "<hr />", $text);
         }
     }
-

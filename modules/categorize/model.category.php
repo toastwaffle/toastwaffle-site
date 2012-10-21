@@ -1,23 +1,21 @@
 <?php
-
-class Category extends Model {
-
+    class Category extends Model {
         static function getCategory($id = null) {
             # we give all of the categories if there isn't one specified
             if (!isset($id))
                 return SQL::current()->select("categorize",
                     "id,name,clean,show_on_home,concat(:url,clean) AS url", NULL, "name ASC",
-                    array(":url" => Config::current()->chyrp_url . "/category/"))->fetchAll();
+                    array(":url" => url("category/")))->fetchAll();
             # single entry
             return SQL::current()->select("categorize",
                 "id,name,clean,show_on_home,concat(:url,clean) AS url", "id = :id", "name ASC",
-                array(':id' => $id, ":url" => Config::current()->chyrp_url . "/category/"), 1)->fetchObject();
+                array(':id' => $id, ":url" => url("category/")), 1)->fetchObject();
         }
 
         # This gets used to convert the category/<foo> name back to an ID or whatever else.
         static function getCategorybyClean($name = string) {
             return SQL::current()->select("categorize", "id,name,clean,show_on_home,concat(:url,clean) AS url", "clean = :clean", "name ASC",
-                array(":url" => Config::current()->chyrp_url . "/category/", ":clean" => $name), 1)->fetchObject();
+                array(":url" => url("category/"), ":clean" => $name), 1)->fetchObject();
         }
 
         static function getCategoryIDbyName($name = string) {
@@ -32,7 +30,7 @@ class Category extends Model {
                 array("post_attributes.post_id = posts.id",
                     "post_attributes.name = 'category_id'",
                     "post_attributes.value = categorize.id"),
-                "`name` ASC", array(":url" => Config::current()->chyrp_url . "/category/"),
+                "`name` ASC", array(":url" => url("category/")),
                 NULL, NULL, "__categorize.name")->fetchAll();
         }
 
@@ -78,6 +76,4 @@ class Category extends Model {
                 SQL::current()->delete("post_attributes", "name = 'category_id'");
             }
         }
-
-}
-?>
+    }

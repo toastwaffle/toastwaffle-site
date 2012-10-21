@@ -9,3 +9,5 @@ themes/*
 !themes/sams-theme
 !themes/themev2
 themes/themev2/images/Textures/*
+/chyrp.tmproj
+/.idea/

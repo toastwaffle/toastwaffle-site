@@ -180,9 +180,8 @@
         }
     
         public function main_index($main) {
-    
             $ids = array();
-    
+
             # this mammoth query allows searching for posts on the main page in 1 query
             $record = SQL::current()->query("SELECT __posts.id FROM __posts
                         LEFT JOIN __post_attributes
@@ -196,20 +195,20 @@
                             OR __post_attributes.value = 0)
                         GROUP BY __posts.id
                     ");
-    
+
             foreach ($record->fetchAll() as $entry)
                 $ids[] = $entry['id'];
-    
+
             if (empty($ids))
                 return false;
-    
+
             $posts = new Paginator(Post::find(array("placeholders" => true,
                                             "where" => array("id" => $ids))),
                                             Config::current()->posts_per_page);
-    
+
             if (empty($posts))
                 return false;
-    
+
             $main->display(array("pages/index"),
                            array("posts" => $posts));
             return true;

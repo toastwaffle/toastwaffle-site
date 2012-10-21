@@ -1657,34 +1657,47 @@
     }
 
     /**
-     * Function: update_check
-     * Checks for new versions of Chyrp.
+     * Function: delete_dir
+     * Removes directories recursively.
      *
-     * Returns:
-     *     Boolean
+     * License GPLv2, Source http://candycms.org/
      */
-    function update_check() {
-        if (!defined('CHECK_UPDATES') or CHECK_UPDATES == false)
-            return;
+    function delete_dir($dir) {
+       if (substr($dir, strlen($dir)-1, 1) != '/')
+           $dir .= '/';
 
-        $version = file_get_contents("http://chyrp.net/api/v1/chyrp_version.php");
-        if ($version > CHYRP_VERSION)
-            return true;
-        else
-            return false;
+       if ($handle = opendir($dir)) {
+           while ($obj = readdir($handle)) {
+               if ($obj != '.' && $obj != '..')
+                   if (is_dir($dir.$obj))
+                       if (!delete_dir($dir.$obj))
+                           return false;
+                   elseif (is_file($dir.$obj))
+                       if (!unlink($dir.$obj)) 
+                           return false; 
+           }
+
+           closedir($handle);
+
+           if (!@rmdir($dir))
+               return false;
+           return true;
+       }
+       return false;
     }
 
     /**
      * Function: generate_captcha
-     * Generates a recaptcha form element.
+     * Generates a captcha form element.
      *
      * Returns:
      *     A string containing an form input type
      */
     function generate_captcha() {
-        require_once INCLUDES_DIR."/lib/recaptchalib.php";
-        $publickey = "6Lf6RsoSAAAAAEqUPsm4icJTg7Ph3mY561zCQ3l3";
-        return recaptcha_get_html($publickey);
+        global $captchaHooks;
+        if (!$captchaHooks)
+           return 0;
+        return call_user_func($captchaHooks[0] . "::getCaptcha");
     }
 
     /**
@@ -1695,16 +1708,10 @@
      *     A string containing an form input type
      */
     function check_captcha() {
-         require_once INCLUDES_DIR."/lib/recaptchalib.php";
-         $privatekey = "6Lf6RsoSAAAAAKn-wPxc1kE-DE0M73i206w56HEN";
-         $resp = recaptcha_check_answer ($privatekey,
-                                $_SERVER['REMOTE_ADDR'],
-                                $_POST['recaptcha_challenge_field'],
-                                $_POST['recaptcha_response_field']);
-         if (!$resp->is_valid) 
-             return false;
-         else
-             return true;
+        global $captchaHooks;
+        if (!$captchaHooks)
+           return true;
+        return call_user_func($captchaHooks[0] . "::verifyCaptcha");
     }
 
     /**

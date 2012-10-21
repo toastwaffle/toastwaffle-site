@@ -1,7 +1,5 @@
 <?php
-
     class ExtensionManager extends Modules {
-
         public function extend_nav($navs) {
             if (Visitor::current()->group->can("toggle_extensions"))
                 $navs["extend_manager"] = array("title" => __("Extension Manager", "extension_manager"));
@@ -9,14 +7,14 @@
             return $navs;
         }
 
-
         static function admin_context($context) {
-            if($_GET['action']=='extend_manager'){
-                $extensions=file_get_contents('http://chyrp.net/api/v1/chyrp_extensions.php');
-                $extensions=explode(',',$extensions);
+            if ($_GET['action'] == "extend_manager") {
+                $extensions = file_get_contents("http://chyrp.net/api/v1/chyrp_extensions.php");
+                $extensions = explode(",", $extensions);
                 array_pop($extensions);
-                $extensions=array_reverse($extensions);
-                $content='';
+                $extensions = array_reverse($extensions);
+                $content = "";
+
                 foreach($extensions as $id){
                     $info=file_get_contents('http://chyrp.net/api/v1/chyrp_extensions.php?id='.$id);
                     $name = preg_replace("#\s*.*\[name\](.*?)\[/name\].*\s*#s", '$1', $info);
@@ -105,20 +103,22 @@
         		$zip->extractTo("../themes/latest");
         	    $zip->close();
         		$handle=opendir("../themes/latest");
-				if($handle) {
-					while(($file = readdir($handle)) !== false) {
-						if(is_dir("../themes/latest/".$file)){
+				if ($handle) {
+					while (($file = readdir($handle)) !== false) {
+						if (is_dir("../themes/latest/".$file)) {
 							rename("../themes/latest/".$file,"../themes/".$file);
-						}
 					}
 				}
+
 				$this->rrmdir("../themes/latest");
         	    unlink("../themes/latest.zip");
         	    $this->rrmdir("../themes/__MACOSX");
         	}
+
         	header('location: ?action=extend_manager');
     	}
-    	public function route_newfeather(){
+
+    	public function route_newfeather() {
         	$fp = fopen ("../feathers/latest.zip", 'w+');
         	$ch = curl_init($_GET['url']); # Here is the file we are downloading
         	curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -138,16 +138,18 @@
 					while(($file = readdir($handle)) !== false) {
 						if(is_dir("../feathers/latest/".$file)){
 							rename("../feathers/latest/".$file,"../modules/".$file);
-						}
 					}
 				}
+
 				$this->rrmdir("../feathers/latest");
         	    unlink("../feathers/latest.zip");
         	    $this->rrmdir("../feathers/__MACOSX");
         	    $this->rrmdir("../feathers/__MACOSX");
         	}
+
         	header('location: ?action=extend_manager');
     	}
+
     	//from http://www.php.net/manual/en/function.rmdir.php#98622
 		function rrmdir($dir) { 
  			if (is_dir($dir)) { 
@@ -162,4 +164,3 @@
  			} 
  		} 	
     }
-
