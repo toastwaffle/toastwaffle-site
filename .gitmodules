@@ -1,9 +1,12 @@
-[submodule "/home/public/modules/bio-box"]
-	path = /home/public/modules/bio-box
+[submodule "modules/bio-box"]
+	path = modules/bio-box
 	url = git@github.com:toastwaffle/bio-box.git
-[submodule "/home/public/modules/chyrproll"]
-	path = /home/public/modules/chyrproll
+[submodule "modules/chyrproll"]
+	path = modules/chyrproll
 	url = git@github.com:toastwaffle/chyrproll.git
-[submodule "/home/public/modules/recent-links"]
-	path = /home/public/modules/recent-links
+[submodule "modules/recent-links"]
+	path = modules/recent-links
 	url = git@github.com:toastwaffle/recent-links.git
+[submodule "modules"]
+	path = modules
+	url = git://github.com/chyrp/modules.git

@@ -6,8 +6,10 @@
         <meta name="robots" content="noindex" />
         <title>$site.name: {% block title %}$title{% endblock %}</title>
         <link rel="stylesheet" href="$theme_url/style.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+        <link rel="stylesheet" href="$site.chyrp_url/includes/lib/redactor/redactor.css" type="text/css" media="screen" charset="utf-8" />
         <script src="$site.chyrp_url/includes/lib/gz.php?file=jquery.js" type="text/javascript" charset="utf-8"></script>
         <script src="$site.chyrp_url/includes/lib/gz.php?file=plugins.js" type="text/javascript" charset="utf-8"></script>
+        <script src="$site.chyrp_url/includes/lib/gz.php?file=redactor/redactor.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="$site.chyrp_url/includes/admin.js.php?action=$route.action" type="text/javascript" charset="utf-8"></script>
 ${ trigger.call("admin_head") }
     </head>
@@ -46,11 +48,7 @@ ${ trigger.call("admin_head") }
         </ul>
         <div class="clear"></div>
         <div class="column" id="content">
-        {% if new_update == 1 %}
-        <p id="update_available" class="message">
-            ${ "Your Chyrp install is out of date. To upgrade, go <a href='%s'>here</a>" | translate | format(site.chyrp_url ~"/upgrade.php?task=upgrade") }
-        </p>
-        {% endif %}
+            {% if new_update %} $new_update {% endif %}
             {% for notice in flash.notices %}
             <p class="message yay">$notice</p>
             {% endfor %}

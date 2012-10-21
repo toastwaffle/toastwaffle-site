@@ -32,14 +32,14 @@
             $this->admin_theme = fallback(Config::current()->admin_theme, "default");
 
             $this->theme = new Twig_Loader(MAIN_DIR."/admin/themes/".$this->admin_theme,
-                                           (is_writable(INCLUDES_DIR."/caches") and !DEBUG) ?
-                                               INCLUDES_DIR."/caches" :
-                                               null);
+                                            (is_writable(INCLUDES_DIR."/caches") and !DEBUG) ?
+                                                INCLUDES_DIR."/caches" :
+                                                null);
 
             $this->default = new Twig_Loader(MAIN_DIR."/admin/themes/default",
-                                             (is_writable(INCLUDES_DIR."/caches") and !DEBUG) ?
-                                                 INCLUDES_DIR."/caches" :
-                                                 null);
+                                            (is_writable(INCLUDES_DIR."/caches") and !DEBUG) ?
+                                                INCLUDES_DIR."/caches" :
+                                                null);
         }
 
         /**
@@ -62,6 +62,8 @@
                 # "Write > Page", if they can add pages.
                 if ($visitor->group->can("add_page"))
                     return $route->action = "write_page";
+                else
+                    show_403(__("Access Denied"), __("You do not have sufficient privileges to view this area."));
             }
 
             if (empty($route->action) or $route->action == "manage") {
@@ -80,18 +82,24 @@
                 # "Manage > Groups", if they can manage groups.
                 if ($visitor->group->can("edit_group") or $visitor->group->can("delete_group"))
                     return $route->action = "manage_groups";
+                else
+                    show_403(__("Access Denied"), __("You do not have sufficient privileges to view this area."));
             }
 
             if (empty($route->action) or $route->action == "settings") {
                 # "General Settings", if they can configure the installation.
                 if ($visitor->group->can("change_settings"))
                     return $route->action = "general_settings";
+                else
+                    show_403(__("Access Denied"), __("You do not have sufficient privileges to view this area."));
             }
 
             if (empty($route->action) or $route->action == "extend") {
                 # "Modules", if they can can enable/disable extensions.
                 if ($visitor->group->can("toggle_extensions"))
                     return $route->action = "modules";
+                else
+                    show_403(__("Access Denied"), __("You do not have sufficient privileges to view this area."));
             }
 
             Trigger::current()->filter($route->action, "admin_determine_action");
@@ -101,38 +109,11 @@
         }
 
         /**
-         * Function: write
-         * Post writing.
-         */
-        public function write_post() {
-            $visitor = Visitor::current();
-
-            if (!$visitor->group->can("add_post", "add_draft"))
-                show_403(__("Access Denied"), __("You do not have sufficient privileges to create posts."));
-
-            $config = Config::current();
-
-            if (empty($config->enabled_feathers))
-                error(__("No Feathers"), __("Please install a feather or two in order to add a post."));
-
-            Trigger::current()->filter($options, array("write_post_options", "post_options"));
-
-            fallback($_GET['feather'], reset($config->enabled_feathers));
-
-            $this->display("write_post",
-                           array("groups" => Group::find(array("order" => "id ASC")),
-                                 "options" => $options,
-                                 "feathers" => Feathers::$instances,
-                                 "feather" => Feathers::$instances[$_GET['feather']]));
-        }
-
-        /**
          * Function: bookmarklet
          * Post writing, from the bookmarklet.
          */
         public function bookmarklet() {
-            $visitor = Visitor::current();
-            if (!$visitor->group->can("add_post", "add_draft"))
+            if (!Visitor::current()->group->can("add_post", "add_draft"))
                 show_403(__("Access Denied"), __("You do not have sufficient privileges to create posts."));
 
             $config = Config::current();
@@ -162,11 +143,36 @@
         }
 
         /**
+         * Function: write
+         * Post writing.
+         */
+        public function write_post() {
+            if (!Visitor::current()->group->can("add_post", "add_draft"))
+                show_403(__("Access Denied"), __("You do not have sufficient privileges to create posts."));
+
+            $config = Config::current();
+
+            if (empty($config->enabled_feathers))
+                error(__("No Feathers"), __("Please install a feather or two in order to add a post."));
+
+            Trigger::current()->filter($options, array("write_post_options", "post_options"));
+
+            fallback($_GET['feather'], reset($config->enabled_feathers));
+
+            $this->display("write_post",
+                           array("groups" => Group::find(array("order" => "id ASC")),
+                                 "options" => $options,
+                                 "feathers" => Feathers::$instances,
+                                 "feather" => Feathers::$instances[$_GET['feather']]));
+        }
+
+        /**
          * Function: add_post
          * Adds a post when the form is submitted.
          */
         public function add_post() {
             $visitor = Visitor::current();
+
             if (!$visitor->group->can("add_post", "add_draft"))
                 show_403(__("Access Denied"), __("You do not have sufficient privileges to create posts."));
 
@@ -2081,7 +2087,8 @@
             }
 
             if (empty($_POST))
-                return $this->display("general_settings", array("locales" => $locales, "timezones" => timezones()));
+                return $this->display("general_settings", array("locales" => $locales,
+                                                                "timezones" => timezones()));
 
             if (!isset($_POST['hash']) or $_POST['hash'] != Config::current()->secure_hashkey)
                 show_403(__("Access Denied"), __("Invalid security key."));
@@ -2121,9 +2128,7 @@
                          $config->set("enable_trackbacking", !empty($_POST['enable_trackbacking'])),
                          $config->set("send_pingbacks", !empty($_POST['send_pingbacks'])),
                          $config->set("enable_xmlrpc", !empty($_POST['enable_xmlrpc'])),
-                         $config->set("enable_ajax", !empty($_POST['enable_ajax'])),
-                         $config->set("enable_wysiwyg", !empty($_POST['enable_wysiwyg'])),
-                         $config->set("enable_recaptcha", !empty($_POST['enable_recaptcha'])));
+                         $config->set("enable_ajax", !empty($_POST['enable_ajax'])));
 
             if (!in_array(false, $set))
                 Flash::notice(__("Settings updated."), "/admin/?action=content_settings");
@@ -2174,6 +2179,22 @@
 
             if (!in_array(false, $set))
                 Flash::notice(__("Settings updated."), "/admin/?action=route_settings");
+        }
+
+        /**
+         * Function: update
+         * Chyrp Update.
+         */
+        public function update() {
+            if (!Visitor::current()->group->can("change_settings"))
+                show_403(__("Access Denied"), __("You do not have sufficient privileges to perform the update."));
+
+            if (isset($_GET['get_update']))
+                return $this->display("update",
+                                array("updating" => Update::get_update()));
+            else
+                return $this->display("update",
+                                array("changelog" => Update::get_changelog()));
         }
 
         /**
@@ -2347,7 +2368,7 @@
             $this->context["site"]       = Config::current();
             $this->context["visitor"]    = $visitor;
             $this->context["logged_in"]  = logged_in();
-            $this->context["new_update"] = update_check();
+            $this->context["new_update"] = Update::check_update();
             $this->context["route"]      = $route;
             $this->context["hide_admin"] = isset($_SESSION["hide_admin"]);
             $this->context["now"]        = time();

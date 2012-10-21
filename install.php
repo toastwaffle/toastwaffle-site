@@ -153,7 +153,6 @@
             $config->set("send_pingbacks", false);
             $config->set("enable_xmlrpc", true);
             $config->set("enable_ajax", true);
-            $config->set("enable_wysiwyg", false);
             $config->set("uploads_path", "/uploads/");
             $config->set("enabled_modules", array());
             $config->set("enabled_feathers", array("text"));
@@ -217,7 +216,7 @@
                              email VARCHAR(128) DEFAULT '',
                              website VARCHAR(128) DEFAULT '',
                              group_id INTEGER DEFAULT 0,
-                             is_approved int(2) DEFAULT 1,
+                             is_approved INTEGER DEFAULT 0,
                              joined_at DATETIME DEFAULT NULL,
                              UNIQUE (login)
                          ) DEFAULT CHARSET=utf8");
@@ -342,10 +341,9 @@
                                    "email" => $_POST['email'],
                                    "website" => $config->url,
                                    "group_id" => $group_id["admin"],
+                                   "is_approved" => 1,
                                    "joined_at" => datetime()));
 
-            # $user_id = $sql->select("users", "id", array("login" => $_POST['login']))->fetchColumn();
-            # $_SESSION['user_id'] = $user_id;
             $installed = true;
         }
     }
