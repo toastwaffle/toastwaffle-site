@@ -41,6 +41,7 @@
 		public function sidebar()
 		{
 			$config = Config::current();
+			echo '				  <div class="bio-box">';
 			echo '                <h1>'.$config->biobox_title.'</h1>';
 			if (in_array("textilize",$config->enabled_modules)) {
 			    $text = Textilize::textile($config->biobox_text);
@@ -54,6 +55,7 @@
 		        }
 	        }
 			echo '                '.$text;
+			echo '				  </div>';
 		}
 	}
 

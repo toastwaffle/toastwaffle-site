@@ -2,8 +2,8 @@
 <input type="hidden" name="last_comment" value="$post.latest_comment" id="last_comment" />
     {% if visitor.logged_in %}
     <p>
-        <span class="who">
-            <a class="logout" href="{% url "logout" %}">${ "Log Out &rarr;" | translate }</a>
+        <span class="right">
+            <a class="logout right" href="{% url "logout" %}">${ "Log Out &rarr;" | translate }</a>
             ${ "Logged in as %s" | translate | format(visitor.full_name | fallback(visitor.login)) }
         </span>
     </p>
@@ -21,12 +21,11 @@
         <input type="text" name="url" value="" id="url" />
     </p>
     {% endif %}
+    <label for="body">Your Comment</label>
+    <textarea name="body" rows="8" cols="40" class="wide"></textarea>
     <p>
-        <textarea name="body" rows="8" cols="40" class="wide"></textarea>
-    </p>
-    <p>
-        <input name="notify" type="checkbox" />
-        ${ "Notify me when others comment on this post" | translate }
+        <input id ="notify" name="notify" type="checkbox" />
+        <label for="notify" class="longlabel">${ "Notify me when others comment on this post" | translate }</label>
     </p>
     <br />
     <p>
@@ -37,6 +36,6 @@
         {% endif %}
         <input type="hidden" name="parent_id" value="${ GET.replytocom | escape }" id="parent_id" />
         <input type="hidden" name="post_id" value="$post.id" id="post_id" />
-        <button type="submit">${ "Speak" | translate }</button>
+        <button type="submit">${ "Add Comment" | translate }</button>
     </p>
 </form>

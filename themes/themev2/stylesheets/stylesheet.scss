@@ -50,8 +50,29 @@ $defpadding: 15px;
     background-color: $basecolour;
     @include gradient_background($basecolour);
     border: 1px solid #ffffff;
-    padding: 10px;
+    padding: 5px;
     color: #ffffff
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.clearfix {
+	display: inline-block;
+}
+ 
+html[xmlns] .clearfix {
+	display: block;
+}
+ 
+* html .clearfix {
+	height: 1%;
 }
 
 body {
@@ -84,34 +105,38 @@ body {
     .purple {
         color: $purple;
     }
-    p, li, .altcol {
-        &:nth-of-type(6n) {
+    h1, h2, h3, h4, h5, h6, p, li, .altcol {
+        &:nth-child(6n) {
             color: $orange;
         }
-        &:nth-of-type(6n+1) {
+        &:nth-child(6n+1) {
             color: $pink;
         }
-        &:nth-of-type(6n+2) {
+        &:nth-child(6n+2) {
             color: $red;
         }
-        &:nth-of-type(6n+3) {
+        &:nth-child(6n+3) {
             color: $green;
         }
-        &:nth-of-type(6n+4) {
+        &:nth-child(6n+4) {
             color: $purple;
         }
-        &:nth-of-type(6n+5) {
+        &:nth-child(6n+5) {
             color: $blue;
         }
     }
     .left {
         text-align: left;
+		float: left;
     }
     .center {
         text-align: center;
+		margin-left: auto;
+		margin-right: auto;
     }
     .right {
         text-align: right;
+		float: right;
     }
     pre {
         font-size: 10px;
@@ -235,11 +260,121 @@ body {
     div.date {
         @include button($purple);
         cursor: default;
+        float: right;
     }
     div.footer a.atom {
         @include button($orange);
         float: right;
     }
+	div.post {
+		margin: 10px 0;
+		width: 100%;
+        div.postsplitter {
+			clear: both;
+            position: relative;
+            height: 20px;
+            width: 80%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            div.split1 {
+                background-color: $blue;
+                height: 2px;
+                width: 80%;
+                position: relative;
+                left: 10%;
+            }
+            div.split2 {
+                background-color: $pink;
+                height: 4px;
+                width: 80%;
+                position: relative;
+                left: 5%;
+            }
+            div.split3 {
+                background-color: $orange;
+                height: 2px;
+                width: 80%;
+                position: relative;
+                left: 8%;
+            }
+            div.split4 {
+                background-color: $green;
+                margin-top: 2px;
+                height: 3px;
+                width: 80%;
+                position: relative;
+                left: 15%;
+            }
+            div.split5 {
+                background-color: $red;
+                margin-top: 2px;
+                height: 2px;
+                width: 80%;
+                position: relative;
+                left: 12%;
+            }
+            div.split6 {
+                background-color: $purple;
+                height: 3px;
+                width: 80%;
+                position: relative;
+                left: 20%;
+            }
+        }
+	}
+	div.video {
+		iframe {
+			display: block;
+			margin: auto;
+		}
+	}
+	div.photo {
+		img {
+			display: block;
+			margin: auto;
+		}
+	}
+	div.quote {
+		blockquote {
+			position: relative;
+			display: inline-block;
+		}
+		blockquote:before {
+			content: "“";
+			position: absolute;
+			top: -40px;
+			left: -40px;
+			font-size: 100px;
+			color: $blue;
+		}
+		blockquote:after {
+			content: "”";
+			position: absolute;
+			bottom: -100px;
+			right: -40px;
+			font-size: 100px;
+			color: $blue;
+		}
+	}
+	li.no_comments {
+		display: none;
+	}
+	form#add_comment {
+		label, input {
+			display: inline-block;
+			vertical-align: middle;
+			margin: 0;
+			margin-right: 10px;
+		}
+		label {
+			width: 150px;
+		}
+		label.longlabel {
+			width: auto;
+		}
+	}
 }
 @media all and (max-width: 800px) {
     div.header {
@@ -338,8 +473,7 @@ body {
                     margin: auto;
                     padding: 5px;
                     background-color: $bg-grey;
-                    @include rounded_corners('top','left');
-                    @include rounded_corners('top','right');
+                    @include all_rounded_corners();
                 }
             }
             div.splitter {
@@ -483,7 +617,7 @@ body {
                     position: relative;
                     left: 20%;
                 }
-            }
+           }
             div.sidebarouter {
                 position: relative;
                 width: 100%;
@@ -492,7 +626,26 @@ body {
                         width: 250px;
                         margin: 15px;
                         float: left;
+						border: 2px solid #ffffff;
                     }
+			        &>*:nth-child(6n) {
+			            border-color: $orange;
+			        }
+			        &>*:nth-child(6n+1) {
+            			border-color: $pink;
+			        }
+			        &>*:nth-child(6n+2) {
+			            border-color: $red;
+			        }
+			        &>*:nth-child(6n+3) {
+            			border-color: $green;
+			        }
+			        &>*:nth-child(6n+4) {
+            			border-color: $purple;
+			        }
+			        &>*:nth-child(6n+5) {
+            			border-color: $blue;
+			        }
                 }
             }
         }
@@ -505,7 +658,7 @@ body {
     position: absolute;
     bottom: 20px;
     left: 0;
-    z-index: 999;
+    z-index: 10;
     li {
         border-left: 1px solid #fff;
         border-right: 1px solid #fff;
@@ -579,6 +732,7 @@ body {
     max-height: 33%;
     overflow-y: auto;
     overflow-x: hidden;
+    z-index: 20;
 }
 #debug h5 {
     margin: 0;
