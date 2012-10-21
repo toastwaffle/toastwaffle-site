@@ -7,6 +7,3 @@
 [submodule "modules/recent-links"]
 	path = modules/recent-links
 	url = git@github.com:toastwaffle/recent-links.git
-[submodule "modules"]
-	path = modules
-	url = git://github.com/chyrp/modules.git
