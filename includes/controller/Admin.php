@@ -1221,16 +1221,18 @@
                                     array("<![CDATA[", "]]>"),
                                     $sane_xml);
 
-            $sane_xml = str_replace("xmlns:excerpt=\"http://wordpress.org/excerpt/1.0/\"",
-                                    "xmlns:excerpt=\"http://wordpress.org/export/1.1/excerpt/\"",
+            $sane_xml = str_replace(array("xmlns:excerpt=\"http://wordpress.org/excerpt/1.0/\"",
+                                          "xmlns:excerpt=\"http://wordpress.org/export/1.1/excerpt/\""),
+                                    "xmlns:excerpt=\"http://wordpress.org/export/1.2/excerpt/\"",
                                     $sane_xml);
-            $sane_xml = str_replace("xmlns:wp=\"http://wordpress.org/export/1.0/\"",
-                                    "xmlns:wp=\"http://wordpress.org/export/1.1/\"",
+            $sane_xml = str_replace(array("xmlns:wp=\"http://wordpress.org/export/1.0/\"",
+                                          "xmlns:wp=\"http://wordpress.org/export/1.1/\""),
+                                    "xmlns:wp=\"http://wordpress.org/export/1.2/\"",
                                     $sane_xml);
 
             if (!substr_count($sane_xml, "xmlns:excerpt"))
                 $sane_xml = preg_replace("/xmlns:content=\"([^\"]+)\"(\s+)/m",
-                                         "xmlns:content=\"\\1\"\\2xmlns:excerpt=\"http://wordpress.org/export/1.1/excerpt/\"\\2",
+                                         "xmlns:content=\"\\1\"\\2xmlns:excerpt=\"http://wordpress.org/export/1.2/excerpt/\"\\2",
                                          $sane_xml);
 
             $fix_amps_count = 1;
@@ -1249,7 +1251,7 @@
                                "/admin/?action=import");
 
             foreach ($xml->channel->item as $item) {
-                $wordpress = $item->children("http://wordpress.org/export/1.1/");
+                $wordpress = $item->children("http://wordpress.org/export/1.2/");
                 $content   = $item->children("http://purl.org/rss/1.0/modules/content/");
                 if ($wordpress->status == "attachment" or $item->title == "zz_placeholder")
                     continue;
@@ -2128,7 +2130,8 @@
                          $config->set("enable_trackbacking", !empty($_POST['enable_trackbacking'])),
                          $config->set("send_pingbacks", !empty($_POST['send_pingbacks'])),
                          $config->set("enable_xmlrpc", !empty($_POST['enable_xmlrpc'])),
-                         $config->set("enable_ajax", !empty($_POST['enable_ajax'])));
+                         $config->set("enable_ajax", !empty($_POST['enable_ajax'])),
+                         $config->set("enable_wysiwyg", !empty($_POST['enable_wysiwyg'])));
 
             if (!in_array(false, $set))
                 Flash::notice(__("Settings updated."), "/admin/?action=content_settings");
