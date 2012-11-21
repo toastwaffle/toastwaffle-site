@@ -2,5 +2,13 @@
 
 {% block content %}
         <h1>${ "Not Found" | translate }</h1>
-        <div class="post body">${ "Sorry, but you are looking for something that isn't here." | translate }</div>
+        <p class="post body">${ "Sorry, but you are looking for something that isn't here." | translate } Perhaps you'd like to search for it?</p>
+        <div class="searchbox">
+            <form action="$site.url" method="get" accept-charset="utf-8">
+                <fieldset>
+                    <input type="hidden" name="action" value="search" id="action" />
+                    <input type="text" id="search" name="query" value="${ GET.query | escape }" />
+                </fieldset>
+            </form>
+        </div>
 {% endblock %}
