@@ -240,7 +240,7 @@
          * Displays page for index
          */
         public function index() {
-            $page = new Page("index");
+            $page = new Page(7);
             if ($page->no_results)
                 return false; # Page not found; the 404 handling is handled externally.
             $this->display(array("pages/page", "pages/".$page->url), array("page" => $page), $page->title);        }
