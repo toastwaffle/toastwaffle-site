@@ -175,7 +175,8 @@
          */
         public function post_from_url($route, $request, $return_post = false) {
             $config = Config::current();
-            $post_url_parts = preg_split("!(\([^)]+\))!", $config->post_url, null, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+            $post_url_parts = preg_split("!(\([^)]+\))!", $config->post_url, null, 
+PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
             $url_regex = "";
             $url_parameters = array();
             Trigger::current()->filter(Post::$url_attrs, "url_code");
@@ -216,7 +217,7 @@
 
         /**
          * Function: blog
-         * Grabs the posts for the main page.
+         * Grabs the posts for the blog page.
          */
         public function blog() {
             $sql = SQL::current();
@@ -235,15 +236,17 @@
                            array("posts" => new Paginator(Post::find(array("placeholders" => true)),
                                                           $this->post_limit)));
         }
+
         /**
          * Function: index
-         * Displays page for index
+         * Grabs the homepage.
          */
         public function index() {
             $page = new Page(7);
-            if ($page->no_results)
-                return false; # Page not found; the 404 handling is handled externally.
-            $this->display(array("pages/page", "pages/".$page->url), array("page" => $page), $page->title);        }
+			if ($page->no_results)
+				return false;
+            $this->display(array("pages/page", "pages/".$page->url), array("page" => $page), $page->title);
+        }
 
         /**
          * Function: archive
@@ -369,7 +372,7 @@
             else
                 $posts = new Paginator(array());
 
-            $this->display(array("pages/search", "pages/index"),
+            $this->display(array("pages/search", "pages/fallback"),
                            array("posts" => $posts,
                                  "search" => $_GET['query']),
                            fix(_f("Search results for \"%s\"", array($_GET['query']))));
@@ -390,7 +393,7 @@
                                                                      "user_id" => $visitor->id))),
                                    $this->post_limit);
 
-            $this->display(array("pages/drafts", "pages/index"),
+            $this->display(array("pages/drafts", "pages/fallback"),
                            array("posts" => $posts),
                            __("Drafts"));
         }
@@ -425,7 +428,7 @@
             if ($post->groups() and !substr_count($post->status, "{".Visitor::current()->group->id."}"))
                 Flash::message(_f("This post is only visible by the following groups: %s.", $post->groups()));
 
-            $this->display(array("pages/view", "pages/index"),
+            $this->display(array("pages/view", "pages/fallback"),
                            array("post" => $post, "posts" => array($post)),
                            $post->title());
         }
@@ -497,6 +500,11 @@
                 error(__("Error"), __("You're already logged in."));
 
             if (!empty($_POST)) {
+                $route = Route::current();
+                if ($config->enable_recaptcha)
+                    if (!check_captcha())
+                        Flash::warning(__("Incorrect captcha code. Please try again."));
+
                 if (empty($_POST['login']))
                     Flash::warning(__("Please enter a username for your account."));
                 elseif (count(User::find(array("where" => array("login" => $_POST['login'])))))
@@ -509,17 +517,17 @@
 
                 if (empty($_POST['email']))
                     Flash::warning(__("E-mail address cannot be blank."));
-                elseif (!preg_match("/^[_A-z0-9-]+((\.|\+)[_A-z0-9-]+)*@[A-z0-9-]+(\.[A-z0-9-]+)*(\.[A-z]{2,4})$/", $_POST['email']))
+                elseif (!preg_match("/^[_A-z0-9-]+((\.|\+)[_A-z0-9-]+)*@[A-z0-9-]+(\.[A-z0-9-]+)*(\.[A-z]{2,4})$/", 
+$_POST['email']))
                     Flash::warning(__("Invalid e-mail address."));
-
-                if ($config->enable_recaptcha and !check_captcha())
-                    Flash::warning(__("Incorrect captcha code. Please try again."));
 
                 if (!Flash::exists("warning")) {
                     if ($config->email_activation) {
                         $to      = $_POST['email'];
                         $subject = _f($config->name." Registration Pending");
-                        $message = _f("Hello, ".fix($_POST['login']).".\n\nYou are receiving this message because you recently registered at ".$config->chyrp_url."\nTo complete your registration, go to ".$config->chyrp_url."/?action=validate&login=".fix($_POST['login'])."&token=".sha1($_POST['login'].$_POST['email']));
+                        $message = _f("Hello, ".fix($_POST['login']).".\n\nYou are receiving this message because you recently 
+registered at ".$config->chyrp_url."\nTo complete your registration, go to 
+".$config->chyrp_url."/?action=validate&login=".fix($_POST['login'])."&token=".sha1($_POST['login'].$_POST['email']));
                         $headers = "From:".$config->email."\r\n" .
                                    "Reply-To:".$config->email. "\r\n" .
                                    "X-Mailer: PHP/".phpversion() ;
@@ -528,7 +536,8 @@
                         $sent = email($to, $subject, $message, $headers);
 
                         if ($sent)
-                            Flash::notice(__("The email address you provided has been sent details to confirm registration."), "/");
+                            Flash::notice(__("The email address you provided has been sent details to confirm registration."), 
+"/");
                         else
                             Flash::notice(__("There was an error emailing the activation link to your email address."), "/");
                     } else {
@@ -654,6 +663,21 @@
             $this->display("forms/user/controls", array(), __("Controls"));
         }
 
+
+        /**
+         * Function: profile
+         * Your Profile page.
+         */
+        public function profile() {
+            if (!logged_in())
+                error(__("Error"), __("You must be logged in to access this area."));
+
+            $visitor = Visitor::current();
+            $visitor->gravatar = get_gravatar($visitor->email);
+
+            return $this->display("pages/profile");
+        }
+
         /**
          * Function: lost_password
          * Handles e-mailing lost passwords to a user's email address.
@@ -668,21 +692,24 @@
 
                 $new_password = random(16);
 
+                $user->update($user->login,
+                              User::hashPassword($new_password),
+                              $user->email,
+                              $user->full_name,
+                              $user->website,
+                              $user->group_id);
+
                 $sent = email($user->email,
                               __("Lost Password Request"),
-                              _f("%s,\n\nWe have received a request for a new password for your account at %s.\n\nPlease log in with the following password, and feel free to change it once you've successfully logged in:\n\t%s",
+                              _f("%s,\n\nWe have received a request for a new password for your account at %s.\n\nPlease log in 
+with the following password, and feel free to change it once you've successfully logged in:\n\t%s",
                                  array($user->login, Config::current()->name, $new_password)));
 
-                if ($sent) {
-                    $user->update($user->login,
-                                  User::hashPassword($new_password),
-                                  $user->email,
-                                  $user->full_name,
-                                  $user->website,
-                                  $user->group_id);
-
-                    Flash::notice(_f("An e-mail has been sent to your e-mail address that contains a new password. Once you have logged in, you can change it at <a href=\"%s\">User Controls</a>.", array(url("controls"))));
-                } else {
+                if ($sent)
+                    Flash::notice(_f("An e-mail has been sent to your e-mail address that contains a new password. Once you have 
+logged in, you can change it at <a href=\"%s\">User Controls</a>.",
+                                  array(url("controls"))));
+                else {
                     # Set their password back to what it was originally.
                     $user->update($user->login,
                                   $user->password,

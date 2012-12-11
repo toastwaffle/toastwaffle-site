@@ -2,6 +2,7 @@
 .htaccess
 feathers/photo/lib/cache/*
 includes/config.yaml.php
+includes/config.bkp.php
 includes/database.yaml.php
 themes/*
 !themes/firecrest
@@ -10,3 +11,19 @@ themes/*
 themes/themev2/images/Textures/*
 /chyrp.tmproj
 /.idea/
+*.sass-cache*
+__sublime_sftp_offset
+coursework/
+gallery/
+investd/
+lobby-o-matic/
+modules/chyrproll/
+modules/ecommerce/
+modules/recent-links/
+ratemybreakfast/
+robots.txt
+smls/
+todo/
+yrs/
+yrs2012/
+

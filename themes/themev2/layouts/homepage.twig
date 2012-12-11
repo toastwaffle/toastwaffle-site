@@ -1,0 +1,134 @@
+<!DOCTYPE html5>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="$theme.type; charset=utf-8" />
+        <title>{% block title %}$site.name{% if title %} » ${ title | escape }{% endif %}{% endblock %}</title>
+        <meta name="description" content="$site.description" />
+        <meta name="generator" content="Chyrp" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="pingback" href="$site.chyrp_url/includes/xmlrpc.php" />
+        <link rel="EditURI" type="application/rsd+xml" href="$site.chyrp_url/includes/rsd.php" />
+        <link rel="shortcut icon" href="$site.url/favicon.ico" />
+        <link rel="canonical" href="{% url route.request %}" />
+        {% if post.next.url %}<link rel="next" href="$post.next.url" />{% endif %}
+        {% if post.prev.url %}<link rel="prev" href="$post.prev.url" />{% endif %}
+        $theme.feeds
+        $theme.stylesheets
+        <link href='https://fonts.googleapis.com/css?family=Averia+Sans+Libre:400,700,400italic,700italic' rel='stylesheet' 
+type='text/css'>
+        $theme.javascripts
+${ trigger.call("head") }
+    </head>
+    <body>
+        <div class="header">
+            <h1>Samuel Littley</h1>
+            <h2>Developer. Photographer. Geek. Scout.</h2>
+            <div class="topnavigation">
+                <ul id="navbar">
+                    <li><a href="https://www.toastwaffle.com/">Home</a></li>
+                    <li><a href="https://www.toastwaffle.com/blog/">Blog</a></li>
+                    {% for item in theme.pages_list %}
+                        <li>
+                            <a href="$item.page.url">$item.page.title</a>
+
+                            {% if item.has_children %}<ul>{% endif %}
+                            {% if not item.has_children %}</li>{% endif %}
+                            {% for ul, li in item.end_tags %}
+                            $ul
+                        $li
+                        {% endfor %}
+                    {% endfor %}
+                    {% if visitor.logged_in %}
+                    <li><a href="{% url "logout" %}">${ "Log Out" | translate }</a><ul>
+                        <li><a href="{% url "controls" %}">${ "User Controls" | translate }</a></li>
+                        <li><a href="{% url "profile" %}">${ "Your Profile" | translate }</a></li>
+                        </ul></li>
+                    {% else %}
+                    <li><a href="{% url "login" %}">${ "Log In" | translate }</a><ul>
+                        <li><a href="{% url "lost_password" %}">${ "Lost Password?" | translate }</a></li>
+                    </ul></li>
+                    {% if site.can_register %}
+                    <li><a href="{% url "register" %}">${ "Register" | translate }</a></li>
+                    {% endif %}
+                    {% endif %}
+
+            {% if visitor.group.can("add_post", "add_draft", "add_page", "view_own_draft", "view_draft", "change_settings", "toggle_extensions") %}
+            {% if visitor.group.can("change_settings", "toggle_extensions") %}
+            <li><a href="$site.chyrp_url/admin/">${ "Admin" | translate }</a>
+            {% else %}
+            <li><a>${ "Admin" | translate }</a>
+            {% endif %}
+                <ul>
+                    {% if visitor.group.can("add_post") %}
+                    <li><a id="add_post" href="{% admin "write_post" %}">${ "Write" | translate }</a></li>
+                    {% endif %}
+                    {% if visitor.group.can("add_page") %}
+                    <li><a id="add_page" href="{% admin "write_page" %}">${ "Add Page" | translate }</a></li>
+                    {% endif %}
+                    {% if visitor.group.can("view_own_draft", "view_draft") %}
+                    <li><a id="your_drafts" href="{% url "drafts" %}">${ "Your Drafts" | translate }</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+            {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="main">
+            <div class="wrapper">
+                <div class="contentouter">
+                    <div class="content">
+                        {% for type, messages in flash.all | items %}
+                        {% for message in messages %}
+                        <div class="${ type | depluralize }">$message</div>
+                        {% endfor %}
+                        {% endfor %}
+                        {% block content %}{% endblock %}
+                        <div class="clear"></div>
+                        <div class="footer">
+                            <a class="atom" href="{% url "feed" %}">atom</a>
+                            <p>Site © 2012 <a href="mailto:samuel.littley@toastwaffle.com">Samuel Littley</a></p>
+                            <p>${ "Proudly Powered by <a class=\"chyrp\" href=\"http://chyrp.net/\">Chyrp</a>" | translate }</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="splitter">
+                    <div class="split1"></div>
+                    <div class="split2"></div>
+                    <div class="split3"></div>
+                    <div class="split4"></div>
+                    <div class="split5"></div>
+                    <div class="split6"></div>
+                </div>
+                <div class="sidebarouter">
+{% include "content/sidebar.twig" %}
+                </div>
+            </div>
+        </div>
+        {% if debug and visitor.group.name == "Admin" %}
+        <div id="debug">
+            <h5>
+                <a class="toggle" href="javascript:void(0)">${ "Toggle" | translate }</a>
+                ${ "Stats" | translate }
+            </h5>
+            <ul>
+                <li><strong>${ "Queries:" | translate }</strong> $sql_queries</li>
+                <li><strong>${ "Load Time:" | translate }</strong> $theme.load_time ${ "seconds" | translate }</li>
+            </ul>
+            <br />
+            <h5>${ "Queries" | translate }</h5>
+            <ol class="queries">
+                {% for debug in sql_debug %}
+                <li>
+                    <pre>${ debug.query | replace("\t", "    ") | escape }</pre>
+                    <em>${ "Called from <strong>%s</strong> on line <strong>%d</strong> at %ss." | translate | format(debug.file, debug.line, debug.time) }</em>
+                </li>
+                {% endfor %}
+            </ol>
+            <div class="clear"></div>
+        </div>
+        {% endif %}
+${ trigger.call("end_content") }
+        <!-- Queries: $sql_queries | Load Time: $theme.load_time -->
+    </body>
+</html>
