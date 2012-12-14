@@ -93,7 +93,8 @@
 
     # Constant: USE_ZLIB
     # Use zlib to provide GZIP compression
-    define('USE_ZLIB', true);
+    if (version_compare(PHP_VERSION, "5.4.4", "<")) define('USE_ZLIB', true);
+    else define('USE_ZLIB', false);
 
     # Set error reporting levels, and headers for Chyrp's JS files.
     if (JAVASCRIPT) {
